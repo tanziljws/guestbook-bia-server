@@ -13,7 +13,7 @@ async function getSiswa(req, res) {
 }
 
 async function createSiswa(req, res) {
-    const { nama, kelas, pesan } = req.body;
+    const { nama, kelas, pesan, tanggal_kunjungan } = req.body;
 
     if (!nama || !kelas) {
         logger.warn('Attempt to create siswa without nama/kelas');
@@ -22,8 +22,9 @@ async function createSiswa(req, res) {
 
     try {
         const result = await pool.query(
-            `INSERT INTO siswa (nama, kelas, pesan) VALUES ($1, $2, $3) RETURNING *`,
-            [nama, kelas, pesan || null]
+            `INSERT INTO siswa (nama, kelas, pesan, tanggal_kunjungan) 
+             VALUES ($1, $2, $3, $4) RETURNING *`,
+            [nama, kelas, pesan || null, tanggal_kunjungan || new Date()]
         );
         logger.info({ siswa: result.rows[0] }, 'Siswa created successfully');
         res.status(201).json(result.rows[0]);
