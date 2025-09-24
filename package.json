@@ -23,8 +23,13 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "path": "^0.12.7",
     "pg": "^8.16.3",
-    "pino": "^9.11.0"
+    "pino": "^9.11.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",

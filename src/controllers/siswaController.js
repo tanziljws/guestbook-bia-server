@@ -33,4 +33,34 @@ async function createSiswa(req, res) {
     }
 }
 
-module.exports = { getSiswa, createSiswa };
+async function uploadFoto(req, res) {
+    const { id } = req.params;
+
+    if (!req.file) {
+        return res.status(400).json({ error: 'Foto tidak ditemukan' });
+    }
+
+    try {
+        const fotoPath = req.file.filename;
+        const result = await pool.query(
+            `UPDATE siswa SET foto = $1 WHERE id = $2 RETURNING *`,
+            [fotoPath, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Siswa tidak ditemukan' });
+        }
+
+        logger.info({ siswa: result.rows[0] }, 'Foto uploaded successfully');
+
+        const siswa = result.rows[0];
+        siswa.foto_url = `${req.protocol}://${req.get('host')}/uploads/siswa/${fotoPath}`;
+
+        res.json(siswa);
+    } catch (err) {
+        logger.error({ err }, 'Error uploading foto');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+module.exports = { getSiswa, createSiswa, uploadFoto };
