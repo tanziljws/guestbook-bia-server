@@ -1,13 +1,19 @@
+const { checkConnection } = require('./src/config/database');
 const express = require('express');
 require('dotenv').config();
 
 const app = express();
-
-const PORT = process.env.PORT;
-const NODE_ENV = process.env.NODE_ENV;
-
 app.use(express.json());
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT} in ${NODE_ENV} mode`);
-});
+const PORT = process.env.PORT || 4000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
+async function startServer() {
+    await checkConnection();
+
+    app.listen(PORT, () => {
+        console.info(`Server running at http://localhost:${PORT} in ${NODE_ENV} mode`);
+    });
+}
+
+startServer();
