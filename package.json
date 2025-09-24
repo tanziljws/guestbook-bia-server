@@ -1,0 +1,20 @@
+{
+  "name": "server-guestbook-bia",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/tanziljws/guestbook-bia-server#readme",
+  "bugs": {
+    "url": "https://github.com/tanziljws/guestbook-bia-server/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanziljws/guestbook-bia-server.git"
+  },
+  "license": "ISC",
+  "author": "ADARIYA0",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
