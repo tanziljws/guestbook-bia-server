@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const logger = require('../logger');
 require('dotenv').config();
 
 const pool = new Pool({
@@ -10,9 +11,9 @@ const pool = new Pool({
 async function checkConnection() {
     try {
         await pool.query('SELECT 1');
-        console.info('Database connected successfully');
+        logger.info('Database connected successfully');
     } catch (err) {
-        console.error('Database connection failed:', err.message);
+        logger.error('Database connection failed:', err.message);
         process.exit(1);
     }
 }
