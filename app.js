@@ -13,6 +13,12 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+// Debug middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
+    next();
+});
+
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
@@ -31,6 +37,12 @@ function imageOnly(req, res, next) {
 }
 
 app.use('/uploads/siswa', imageOnly, express.static(path.join(__dirname, 'uploads/siswa')));
+
+// Catch-all route for debugging
+app.use((req, res) => {
+    console.log(`Unmatched route: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
+});
 
 app.use((err, req, res, next) => {
     if (err instanceof multer.MulterError) {

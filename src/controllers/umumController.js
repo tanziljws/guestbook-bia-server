@@ -33,4 +33,44 @@ async function createUmum(req, res) {
     }
 }
 
-module.exports = { getUmum, createUmum };
+async function deleteUmum(req, res) {
+    const { id } = req.params;
+
+    if (!id) {
+        logger.warn('Attempt to delete umum without ID');
+        return res.status(400).json({ error: 'ID umum wajib diisi' });
+    }
+
+    try {
+        const result = await pool.query(
+            'DELETE FROM umum WHERE id = $1 RETURNING *',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Data umum tidak ditemukan' });
+        }
+
+        logger.info({ umum: result.rows[0] }, 'Umum deleted successfully');
+        res.json({ message: 'Data umum berhasil dihapus', data: result.rows[0] });
+    } catch (err) {
+        logger.error({ err }, 'Error deleting umum');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function deleteAllUmum(req, res) {
+    console.log('deleteAllUmum function called');
+    try {
+        const result = await pool.query('DELETE FROM umum RETURNING *');
+        logger.info({ count: result.rows.length }, 'All umum deleted successfully');
+        console.log(`Deleted ${result.rows.length} umum records`);
+        res.json({ message: `${result.rows.length} data umum berhasil dihapus` });
+    } catch (err) {
+        logger.error({ err }, 'Error deleting all umum');
+        console.error('Error in deleteAllUmum:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+module.exports = { getUmum, createUmum, deleteUmum, deleteAllUmum };

@@ -64,4 +64,47 @@ async function uploadFoto(req, res) {
     }
 }
 
-module.exports = { getSiswa, createSiswa, uploadFoto };
+async function deleteSiswa(req, res) {
+    const { id } = req.params;
+    console.log(`deleteSiswa function called with ID: ${id}`);
+
+    if (!id) {
+        logger.warn('Attempt to delete siswa without ID');
+        return res.status(400).json({ error: 'ID siswa wajib diisi' });
+    }
+
+    try {
+        const result = await pool.query(
+            'DELETE FROM siswa WHERE id = $1 RETURNING *',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Siswa tidak ditemukan' });
+        }
+
+        logger.info({ siswa: result.rows[0] }, 'Siswa deleted successfully');
+        console.log(`Deleted siswa with ID ${id}:`, result.rows[0]);
+        res.json({ message: 'Siswa berhasil dihapus', data: result.rows[0] });
+    } catch (err) {
+        logger.error({ err }, 'Error deleting siswa');
+        console.error('Error in deleteSiswa:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function deleteAllSiswa(req, res) {
+    console.log('deleteAllSiswa function called');
+    try {
+        const result = await pool.query('DELETE FROM siswa RETURNING *');
+        logger.info({ count: result.rows.length }, 'All siswa deleted successfully');
+        console.log(`Deleted ${result.rows.length} siswa records`);
+        res.json({ message: `${result.rows.length} data siswa berhasil dihapus` });
+    } catch (err) {
+        logger.error({ err }, 'Error deleting all siswa');
+        console.error('Error in deleteAllSiswa:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+module.exports = { getSiswa, createSiswa, uploadFoto, deleteSiswa, deleteAllSiswa };
