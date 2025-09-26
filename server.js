@@ -9,8 +9,8 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 async function startServer() {
     await checkConnection();
 
-    app.listen(PORT, () => {
-        logger.info(`Server running at http://localhost:${PORT} in ${NODE_ENV} mode`);
+    app.listen(PORT, '0.0.0.0', () => {
+        logger.info(`Server running at http://0.0.0.0:${PORT} in ${NODE_ENV} mode`);
     });
 }
 
