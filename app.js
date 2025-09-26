@@ -10,12 +10,6 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-
 app.use('/api/umum', umumRoutes);
 
 module.exports = app;
